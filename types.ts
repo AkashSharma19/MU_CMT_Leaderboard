@@ -11,7 +11,7 @@ export interface TeamData {
   rank: number;
   teamName: string;
   plPercentage: number | null;
-  totalInvestment?: number;
+  totalMoneyDeployed?: number;
   currentNav?: number;
   stocks: StockPosition[];
   change?: number; // Optional daily change for UI flair

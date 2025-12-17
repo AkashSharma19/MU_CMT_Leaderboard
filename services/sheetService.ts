@@ -6,7 +6,7 @@ export const MOCK_DATA: TeamData[] = [
     rank: 1, 
     teamName: 'Insomno', 
     plPercentage: 360.54, 
-    totalInvestment: 100000, 
+    totalMoneyDeployed: 100000, 
     currentNav: 460540,
     stocks: [
       { name: 'Nvidia', buyPrice: 400, quantity: 10, cmp: 950, currentValue: 9500, investmentAmount: 4000 },
@@ -115,23 +115,25 @@ export const fetchSheetData = async (
         plIndex = headers.findIndex(h => h.includes('gain') && h.includes('loss'));
     }
 
-    // Optional: Total Investment and Current NAV
-    // Refined logic for Total Money Deployed
-    // We specifically look for "money" or "deployed" which are more unique to the main capital column 
-    // than "investment" which might appear in stock columns.
-    let invIndex = headers.findIndex(h => h.includes('totalmoney') || h.includes('money') || h.includes('deployed'));
+    // Optional: Total Money Deployed and Current NAV
+    // We look for 'totalmoney', 'deployed', OR 'investment' to capture common variations.
+    let moneyIndex = headers.findIndex(h => 
+        h.includes('totalmoney') || 
+        h.includes('money') || 
+        h.includes('deployed') || 
+        h.includes('totalinvestment') ||
+        h.includes('investment')
+    );
     
-    // Current NAV logic (confirmed working)
     let navIndex = headers.findIndex(h => h.includes('currentnav') || h.includes('currentvalue') || h.includes('nav'));
 
-    // FALLBACK STRATEGY: 
-    // If not found by name, assume standard layout relative to Team Name
+    // FALLBACK STRATEGY (Positional): 
     if (teamIndex !== -1) {
-        // If Investment column not found, check immediate next column (Team + 1)
-        if (invIndex === -1 && (teamIndex + 1) < headers.length) {
-            invIndex = teamIndex + 1;
+        // Fallback for Money Deployed: Check immediate next column (Team + 1)
+        if (moneyIndex === -1 && (teamIndex + 1) < headers.length) {
+            moneyIndex = teamIndex + 1;
         }
-        // If NAV column not found, check 2 columns after team (Team + 2)
+        // Fallback for NAV: Check 2 columns after team (Team + 2)
         if (navIndex === -1 && (teamIndex + 2) < headers.length) {
             navIndex = teamIndex + 2;
         }
@@ -194,7 +196,7 @@ export const fetchSheetData = async (
         }
 
         // Parse Investment Stats
-        const totalInvestment = (invIndex !== -1 && row[invIndex]) ? parseNum(row[invIndex]) : 0;
+        const totalMoneyDeployed = (moneyIndex !== -1 && row[moneyIndex]) ? parseNum(row[moneyIndex]) : 0;
         const currentNav = (navIndex !== -1 && row[navIndex]) ? parseNum(row[navIndex]) : 0;
 
         // Parse Stocks
@@ -225,7 +227,7 @@ export const fetchSheetData = async (
           rank: 0, 
           teamName: teamName.trim(),
           plPercentage: pl,
-          totalInvestment,
+          totalMoneyDeployed,
           currentNav,
           stocks
         };

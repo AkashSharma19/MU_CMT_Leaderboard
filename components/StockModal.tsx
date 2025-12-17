@@ -58,7 +58,7 @@ export const StockModal: React.FC<StockModalProps> = ({ team, onClose }) => {
                     <DollarSign size={14} /> Total Money Deployed
                 </div>
                 <div className="text-xl font-mono font-bold text-white">
-                    {formatCurrency(team.totalInvestment)}
+                    {formatCurrency(team.totalMoneyDeployed)}
                 </div>
             </div>
             <div className="bg-dark-800/50 border border-white/5 p-4 rounded-xl">
