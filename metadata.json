@@ -1,0 +1,5 @@
+{
+  "name": "Leaderboard",
+  "description": "A dark-themed, high-performance leaderboard tracking Team P/L% fetching data from Google Sheets.",
+  "requestFramePermissions": []
+}
